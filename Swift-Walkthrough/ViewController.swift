@@ -33,7 +33,18 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return cell
     }
 
+    func searchItunesFor(searchTerm: String) {
+        var iTunesSearchTerm = searchTerm.stringByReplacingOccurrencesOfString(" ", withString: "+", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
 
+        // escape anything that is not URL friendly
+        var escapedSearchTerm = iTunesSearchTerm.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+        var urlPath = "https://itunes.apple.com/search?term=\(escapedSearchTerm)&media=software"
+        var url = NSURL(string: urlPath)
+        var request: NSURLRequest = NSURLRequest(URL: url)
+        var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: false)
+        
+        println("Search iTunes API for URL \(url)")        
+    }
 
 }
 
