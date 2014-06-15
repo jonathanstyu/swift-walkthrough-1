@@ -16,7 +16,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         searchItunesFor("Angry Birds")
-        // Do any additional setup after loading the view, typically from a nib.
     }
 
     override func didReceiveMemoryWarning() {
@@ -25,13 +24,25 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return tableData.count
     }
     
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
         let cell: UITableViewCell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "MyTestCell")
-        cell.text = "Row #\(indexPath.row)"
-        cell.detailTextLabel.text = "Subtitle #\(indexPath.row)"
+        var rowData: NSDictionary = self.tableData[indexPath.row] as NSDictionary
+        
+        cell.text = rowData["trackName"] as String
+        
+        // For image
+        var urlString: NSString = rowData["artworkUrl60"] as NSString
+        var imgURL: NSURL = NSURL(string: urlString)
+        
+        // download NSData representation of the image
+        var imgData: NSData = NSData(contentsOfURL: imgURL)
+        cell.image = UIImage(data: imgData)
+        
+        var formattedPrice: NSString = rowData["formattedPrice"] as NSString
+        cell.detailTextLabel.text = formattedPrice
         
         return cell
     }
@@ -71,6 +82,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             self.tableData = results
             self.appsTableView.reloadData()
         }
+
     }
     
 
