@@ -9,10 +9,13 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    @IBOutlet var appsTableView : UITableView 
+    @IBOutlet var appsTableView : UITableView
+    var data: NSMutableData = NSMutableData()
+    var tableData: NSArray = NSArray()
                             
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchItunesFor("Angry Birds")
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -43,8 +46,33 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         var request: NSURLRequest = NSURLRequest(URL: url)
         var connection: NSURLConnection = NSURLConnection(request: request, delegate: self, startImmediately: false)
         
-        println("Search iTunes API for URL \(url)")        
+        println("Search iTunes API for URL \(url)")
+        connection.start()
     }
+    
+    func connection(didReceiveResponse: NSURLConnection!, didReceiveResponse response: NSURLResponse!) {
+        self.data = NSMutableData()
+    }
+    
+    func connection(connection: NSURLConnection!, didReceiveData data: NSData!) {
+        // Append the received data to data object
+        self.data.appendData(data)
+    }
+    
+    func connectionDidFinishLoading(connection: NSURLConnection!) {
+        // Request complete. self.data should have the information 
+        // Convert the retrieved data into an object through JSON deserialization
+        
+        var err: NSError
+        var jsonResult: NSDictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil) as NSDictionary
+        
+        if jsonResult.count > 0 && jsonResult["results"].count > 0 {
+            var results: NSArray = jsonResult["results"] as NSArray
+            self.tableData = results
+            self.appsTableView.reloadData()
+        }
+    }
+    
 
 }
 
