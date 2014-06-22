@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  SearchResultsViewController.swift
 //  Swift-Walkthrough
 //
 //  Created by Jonathan Yu on 6/7/14.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class SearchResultsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet var appsTableView : UITableView
     var data: NSMutableData = NSMutableData()
     var tableData: NSArray = NSArray()
